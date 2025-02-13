@@ -13,26 +13,43 @@ function updateTotalDisplay() {
   totalDisplay.textContent = `Total: ${formatCurrency(total)}`;
 }
 
+function updateChipCount(button, index, change) {
+  const chipValue = parseInt(button.getAttribute("data-value"), 10);
+
+  if (change === -1 && clickCounts[index] === 0) return;
+
+  clickCounts[index] += change;
+  total += chipValue * change;
+
+  updateTotalDisplay();
+  
+  const countDisplay = button.nextElementSibling;
+  countDisplay.textContent = clickCounts[index];
+}
+
 document.querySelectorAll(".chip-button").forEach((button, index) => {
   clickCounts[index] = 0;
 
-  button.addEventListener("click", () => {
-    const chipValue = parseInt(button.getAttribute("data-value"), 10);
+  button.addEventListener("click", () => updateChipCount(button, index, 1));
 
-    total += chipValue;
+  let touchStartX = 0;
+  
+  button.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+  });
 
-    clickCounts[index]++;
-
-    updateTotalDisplay();
-
-    const countDisplay = button.nextElementSibling;
-    countDisplay.textContent = clickCounts[index];
+  button.addEventListener("touchend", (e) => {
+    let touchEndX = e.changedTouches[0].clientX;
+    
+    if (touchStartX - touchEndX > 50) {
+      updateChipCount(button, index, -1);
+    }
   });
 });
 
 document.getElementById("reset-button").addEventListener("click", () => {
   total = 0;
-
+  
   document.querySelectorAll(".chip-count").forEach((countDisplay, index) => {
     clickCounts[index] = 0;
     countDisplay.textContent = "0";
@@ -43,8 +60,7 @@ document.getElementById("reset-button").addEventListener("click", () => {
 
 document.getElementById("copy-button").addEventListener("click", () => {
   const totalText = totalDisplay.textContent.replace("Total: ", "");
-  navigator.clipboard
-    .writeText(totalText)
+  navigator.clipboard.writeText(totalText)
     .then(() => {
       alert(`Copied to clipboard: ${totalText}`);
     })
