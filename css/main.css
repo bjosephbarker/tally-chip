@@ -1,8 +1,8 @@
 :root {
   --base-font-size: 18px;
   --base-line-height: 1.4rem;
-  --font-size-xl: clamp(2rem, calc(5vw + 1rem), 3.2rem);
-  --font-size-600: clamp(1.2rem, calc(2vw + 1rem), 2.5rem);
+  --font-size-xl: clamp(1.95rem, 1.56vi + 1.56rem, 2.81rem);
+  --font-size-600: clamp(1.56rem, 1vi + 1.31rem, 2.11rem);
   --font-size-500: 1.25rem;
   --font-size-400: 1rem;
   --color-1: #183749;
@@ -102,7 +102,7 @@ button:active {
 .chip-count {
   position: absolute;
   left: 50%;
-  bottom: 0;
+  top: 0;
   transform: translateX(-50%);
   background-color: #fff;
   padding: .5em 1em;
